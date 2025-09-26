@@ -1,0 +1,21 @@
+en:
+  filter: &filter
+    search_form:
+      title: "Search Filters"
+      placeholder:
+        field:
+          name: "Search by name"
+          document: "Search by document"
+          description: "Search by description"
+
+  forms/search_forms:
+    fields:
+      name:
+        label: "Name"
+      document:
+        label: "Document"
+      description:
+        label: "Description"
+
+  account:
+    filter: *filter

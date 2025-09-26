@@ -1,0 +1,59 @@
+<%
+  filter_params = params[:filters]&.permit! || {}
+  search_form = BulletTrain::TableFilters::Forms::SearchForm.new(filter_params)
+%>
+
+<div data-controller="filter-toggle">
+  <div class="mb-4 flex justify-end">
+    <button type="button"
+            class="p-2 border border-gray-300 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            data-action="click->filter-toggle#toggle"
+            title="Toggle Filters">
+      <svg data-filter-toggle-target="icon"
+           class="h-5 w-5"
+           fill="none"
+           stroke="currentColor"
+           viewBox="0 0 24 24">
+        <path stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.707A1 1 0 013 7V4z"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Filter Form (Initially Hidden) -->
+  <div data-filter-toggle-target="filterForm">
+    <%= form_with model: search_form,
+                  url: url,
+                  method: :get,
+                  data: {
+                    controller: "search",
+                    searchDelayValue: 300,
+                    turbo_frame: turbo_frame,
+                  },
+                  local: true do |form| %>
+
+      <div class="grid gap-3 p-4 border border-gray-300 rounded mb-4">
+        <label class="block text-md text-gray-700 mb-2">
+          <strong><%= t(".title") %></strong>
+        </label>
+        <% attributes.each do |attr, field_type| %>
+          <% if field_type == :date %>
+            <!-- To be implemented -->
+          <% else %>
+            <%= render 'shared/fields/text_field',
+                       form: form,
+                       method: attr,
+                       options: {
+                         placeholder: t(".placeholder.field.#{attr.to_s}"),
+                         name: "filters[#{attr}]",
+                         value: filter_params[attr],
+                         data: { action: "input->search#submitForm" }
+                       } %>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>
