@@ -1,0 +1,23 @@
+en:
+  table_filters: &table_filters
+    search_form:
+      title: "Search Filters"
+      placeholder:
+        field:
+          name: "Search by name"
+          document: "Search by document"
+          description: "Search by description"
+      toggle:
+        text: "Filters"
+
+  forms/search_forms:
+    fields:
+      name:
+        label: "Name"
+      document:
+        label: "Document"
+      description:
+        label: "Description"
+
+  account:
+    table_filters: *table_filters

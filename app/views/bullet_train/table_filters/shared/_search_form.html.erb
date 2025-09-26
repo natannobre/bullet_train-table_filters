@@ -1,0 +1,60 @@
+<%
+  filter_params = params[:filters]&.permit! || {}
+  search_form = BulletTrain::TableFilters::Forms::SearchForm.new(filter_params)
+%>
+
+<div data-controller="filter-toggle">
+  <div class="mb-4 flex justify-end">
+    <button type="button"
+            class="px-4 py-2 bg-blue-600 dark:bg-blue-500 text-black dark:text-white border-2 border-blue-700 dark:border-blue-400 rounded-lg shadow-sm hover:bg-blue-700 dark:hover:bg-blue-400 hover:border-blue-800 dark:hover:border-blue-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-blue-400 dark:focus:ring-offset-gray-800 transition-colors duration-200 flex items-center gap-2"
+            data-action="click->filter-toggle#toggle"
+            title="Toggle Filters">
+      <svg data-filter-toggle-target="icon"
+           class="h-5 w-5"
+           fill="none"
+           stroke="currentColor"
+           viewBox="0 0 24 24">
+        <path stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.707A1 1 0 013 7V4z"/>
+      </svg>
+      <span class="text-sm font-medium"><%= t(".toggle.text") %></span>
+    </button>
+  </div>
+
+  <!-- Filter Form (Initially Hidden) -->
+  <div data-filter-toggle-target="filterForm">
+    <%= form_with model: search_form,
+                  url: url,
+                  method: :get,
+                  data: {
+                    controller: "search",
+                    searchDelayValue: 300,
+                    turbo_frame: turbo_frame,
+                  },
+                  local: true do |form| %>
+
+      <div class="grid gap-3 p-6 border-2 border-gray-300 dark:border-gray-500 dark:bg-gray-800 rounded-lg shadow-md dark:shadow-gray-900/25 mb-4">
+        <label class="block text-lg font-semibold text-gray-800 dark:text-gray-100 mb-3">
+          <strong><%= t(".title") %></strong>
+        </label>
+        <% attributes.each do |attr, field_type| %>
+          <% if field_type == :date %>
+            <!-- To be implemented -->
+          <% else %>
+            <%= render 'shared/fields/text_field',
+                       form: form,
+                       method: attr,
+                       options: {
+                         placeholder: t(".placeholder.field.#{attr.to_s}"),
+                         name: "filters[#{attr}]",
+                         value: filter_params[attr],
+                         data: { action: "input->search#submitForm" }
+                       } %>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>
